@@ -2,14 +2,13 @@
 
 require('module-alias/register')
 
-const mongooseConfig = require('configs/mongoose')
-
 const middy = require('@middy/core')
 const cors = require('@middy/http-cors')
-const middyMongooseConnector = require('middy-mongoose-connector')
 const doNotWaitForEmptyEventLoop = require('@middy/do-not-wait-for-empty-event-loop')
 
 const Store = require('models/Store')
+
+const mongooseMiddleware = require('middlewares/mongooseMiddleware')
 
 /**
  * @api {get} /nearests Gets all `storees` near a `location`
@@ -65,13 +64,7 @@ const main = middy(async event => {
 
 main
   .use(doNotWaitForEmptyEventLoop())
-  .use(
-    middyMongooseConnector
-      .default({
-        mongoose    : mongooseConfig.mongoose,
-        databaseURI : mongooseConfig.url
-      })
-  )
+  .use(mongooseMiddleware)
   .use(cors())
 
 module.exports = { main }
