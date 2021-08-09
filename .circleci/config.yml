@@ -61,6 +61,7 @@ jobs:
           name    : Running tests
           command : npm run test:coverage
           environment:
+            LOCAL_PORT      : 3000
             MONGODB_URL_TEST: mongodb://localhost:27017/contartec-test
 
 workflows:
