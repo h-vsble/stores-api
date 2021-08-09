@@ -121,7 +121,7 @@ schema
 schema
   .virtual('isOpen')
   .get(function() {
-    let isOpen = true
+    let isOpen = false
 
     if (this && this.todayOpen)
       isOpen = this.todayOpen.toLowerCase() != 'gesloten'

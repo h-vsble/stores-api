@@ -5,6 +5,48 @@ const Store = require('models/Store')
 const StoreMock = require('../mocks/models/StoreMock')
 
 describe('Store', () => {
+  describe('virtuals', () => {
+    describe('isOpen', () => {
+      context('when `todayOpen` is not `null`', () => {
+        context('when `todayOpen` is not `Gesloten`', () => {
+          let store
+
+          before(() => {
+            store = new Store({ todayOpen: '08:00' })
+          })
+
+          it('should return `true`', () => {
+            expect(store.toJSON().isOpen).to.true
+          })
+        })
+
+        context('when `todayOpen` is `Gesloten`', () => {
+          let store
+
+          before(() => {
+            store = new Store({ todayOpen: 'Gesloten' })
+          })
+
+          it('should return `true`', () => {
+            expect(store.toJSON().isOpen).to.false
+          })
+        })
+      })
+
+      context('when `todayOpen` is `null`', () => {
+        let store
+
+        before(() => {
+          store = new Store()
+        })
+
+        it('should return `false`', () => {
+          expect(store.toJSON().isOpen).to.false
+        })
+      })
+    })
+  })
+
   describe('#save', () => {
     context('when `store` is valid', () => {
       let store
