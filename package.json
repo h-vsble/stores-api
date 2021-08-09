@@ -8,9 +8,9 @@
     "docs": "documentation readme functions/** --section=Docs",
     "migrate": "migrate-mongo up",
     "mocha": "cross-env NODE_ENV=test _mocha --config mocharc.js",
-    "test": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && npm run mocha",
-    "test:watch": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && npm run mocha -- --watch",
-    "test:coverage": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && npm run coverage && npm run coverage:upload",
+    "test": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && STAGE=test npm run mocha",
+    "test:watch": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && STAGE=test npm run mocha -- --watch",
+    "test:coverage": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && STAGE=test npm run coverage && npm run coverage:upload",
     "coverage": "cross-env STAGE=test nyc --reporter=text-summary --reporter=lcov --reporter=cobertura --report-dir=./coverage --reporter=html npm run mocha -- --reporter=min --exit",
     "coverage:upload": "codecov",
     "update:docs": "npm run docs && git add README.md && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'"
@@ -27,6 +27,7 @@
     "configs": "./configs",
     "functions": "./functions",
     "models": "./models",
+    "middlewares": "./middlewares",
     "tests": "./tests"
   },
   "dependencies": {
