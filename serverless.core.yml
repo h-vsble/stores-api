@@ -32,5 +32,4 @@ resources:
 plugins:
 - serverless-offline
 - serverless-dotenv-plugin
-- serverless-domain-manager
 - serverless-iam-roles-per-function
