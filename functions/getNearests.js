@@ -6,10 +6,12 @@ const mongooseConfig = require('configs/mongoose')
 
 const middy = require('@middy/core')
 const cors = require('@middy/http-cors')
-const middyMongooseConnector = require('middy-mongoose-connector')
+// const middyMongooseConnector = require('middy-mongoose-connector')
 const doNotWaitForEmptyEventLoop = require('@middy/do-not-wait-for-empty-event-loop')
 
 const Store = require('models/Store')
+
+mongooseConfig.mongoose.set('debug')
 
 /**
  * @api {get} /nearests Gets all `storees` near a `location`
@@ -40,8 +42,11 @@ const main = middy(async event => {
     let store = {}
 
     if (latitude && longitude) {
+      console.warn('[cu]')
       store = await Store
         .getNearests(latitude, longitude, radius, { limit })
+
+      console.warn('[cu]', store)
     }
 
     return {
@@ -65,13 +70,37 @@ const main = middy(async event => {
 
 main
   .use(doNotWaitForEmptyEventLoop())
-  .use(
-    middyMongooseConnector
-      .default({
-        mongoose    : mongooseConfig.mongoose,
-        databaseURI : mongooseConfig.url
-      })
-  )
+  .use({
+    before: async () => {
+      if (mongooseConfig.mongoose.connection.readyState === 1)
+        console.warn('Using existing database connection')
+      else {
+        console.warn('Using new database connection')
+
+        await mongooseConfig.mongoose
+          .connect(mongooseConfig.url, {
+            useCreateIndex: true,
+            useFindAndModify: false,
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+          })
+      }
+    },
+    after: async () => {
+      if (mongooseConfig.mongoose.connection.readyState !== 0) {
+        console.warn('Closing database connection')
+        await mongooseConfig.mongoose.connection.close()
+      }
+    }
+  })
+  // .use(
+  //   middyMongooseConnector
+  //     .default({
+  //       mongoose    : mongooseConfig.mongoose,
+  //       databaseURI : mongooseConfig.url,
+  //       shouldLog   : true
+  //     })
+  // )
   .use(cors())
 
 module.exports = { main }
