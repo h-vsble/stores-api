@@ -1,0 +1,21 @@
+basePath: stores
+
+cors:
+  origin: '*'
+  headers:
+    - Content-Type
+    - X-Amz-Date
+    - Authorization
+    - X-Api-Key
+    - X-Amz-Security-Token
+    - X-Amz-User-Agent
+    - x-access-token
+
+customDomain:
+  domainName: ${self:provider.stage}.api.com
+  certificateName: '*.${self:provider.stage}.api.com'
+  basePath: ${self:custom.basePath}
+  endpointType: 'edge'
+  stage: ${self:provider.stage}
+  autoDomain: true
+  createRoute53Record: false

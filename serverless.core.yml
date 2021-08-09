@@ -1,0 +1,36 @@
+frameworkVersion: ">= 1.79.0"
+
+service: stores-api
+
+provider: ${file(.serverless-config/provider.yml)}
+
+package:
+  exclude:
+    - test/**
+    - .circleci/**
+    - .serverless-config/**
+    - ./**/tests/**
+
+custom: ${file(.serverless-config/custom.yml)}
+
+functions:
+  getNearests:
+    handler: functions/getNearests.main
+    environment:
+      REDIS_URL: ${env:REDIS_URL, ssm:/jbo/${self:provider.stage}/REDIS_URL}
+      MONGODB_URL: ${env:MONGODB_URL, ssm:/jbo/${self:provider.stage}/MONGODB_URL}
+    reservedConcurrency: 2
+    events:
+      - http:
+          path: /nearests
+          method: get
+          cors: ${self:custom.cors}
+
+resources:
+  - ${file(.serverless-config/resources.yml)}
+
+plugins:
+- serverless-offline
+- serverless-dotenv-plugin
+- serverless-domain-manager
+- serverless-iam-roles-per-function
