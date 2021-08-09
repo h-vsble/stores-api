@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Stores lambda API",
   "scripts": {
-    "start": "cross-env STAGE=test npm run migrate && sls offline start --skipCacheInvalidation",
+    "start": "npm run migrate && sls offline start --skipCacheInvalidation",
     "lint": "cross-env STAGE=test eslint -c .eslintrc.json \"**/*.js\"",
     "docs": "documentation readme functions/** --section=Docs",
     "migrate": "migrate-mongo up",
@@ -55,7 +55,6 @@
     "jsdoc": "^3.6.2",
     "mocha": "^9.0.2",
     "nyc": "^15.1.0",
-    "serverless-domain-manager": "^4.2.0",
     "serverless-dotenv-plugin": "^3.9.0",
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-offline": "^7.0.0",
