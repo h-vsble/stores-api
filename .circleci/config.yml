@@ -71,13 +71,9 @@ workflows:
       - checkout_code
 
       - node_dependencies:
-          context:
-            - github
           requires:
             - checkout_code
 
       - tests:
-          context:
-            - github
           requires:
             - node_dependencies
