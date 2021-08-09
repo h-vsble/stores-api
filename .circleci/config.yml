@@ -1,0 +1,83 @@
+version: 2
+
+jobs:
+  checkout_code:
+    working_directory: /home/circleci/stores-api
+
+    docker:
+      - image: circleci/node:12
+
+    steps:
+      - checkout
+
+      - save_cache:
+          key   : repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths :
+            - ./
+
+  node_dependencies:
+    working_directory: /home/circleci/stores-api
+
+    docker:
+      - image: circleci/node:12
+
+    steps:
+      - restore_cache:
+          key: repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          key: node-cache-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "package.json" }}
+
+      - run:
+          name    : Installing npm dependencies
+          command : npm install
+
+      - save_cache:
+          key   : node-cache-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "package.json" }}
+          paths :
+            - ./node_modules
+
+  tests:
+    working_directory: /home/circleci/stores-api
+
+    docker:
+      - image: circleci/node:12
+
+      - image: mongo:4.2
+
+    steps:
+
+      - restore_cache:
+          key: repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          key: node-cache-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "package.json" }}
+
+      - run:
+          name    : Waiting for Mongo
+          command : dockerize -wait tcp://localhost:27017 -timeout 1m
+
+      - run:
+          name    : Running tests
+          command : npm run test:coverage
+          environment:
+            MONGODB_URL_TEST  : mongodb://localhost:27017/contartec-test
+
+workflows:
+  version: 2
+
+  build-and-deploy:
+    jobs:
+      - checkout_code
+
+      - node_dependencies:
+          context:
+            - github
+          requires:
+            - checkout_code
+
+      - tests:
+          context:
+            - github
+          requires:
+            - node_dependencies
