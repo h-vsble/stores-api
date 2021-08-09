@@ -17,12 +17,11 @@ functions:
   getNearests:
     handler: functions/getNearests.main
     environment:
-      REDIS_URL: ${env:REDIS_URL, ssm:/jbo/${self:provider.stage}/REDIS_URL}
-      MONGODB_URL: ${env:MONGODB_URL, ssm:/jbo/${self:provider.stage}/MONGODB_URL}
+      MONGODB_URL: ${ssm:/jbo/${self:provider.stage}/MONGODB_URL, env:MONGODB_URL}
     reservedConcurrency: 2
     events:
       - http:
-          path: /nearests
+          path: /${self:custom.basePath}/nearests
           method: get
           cors: ${self:custom.cors}
 

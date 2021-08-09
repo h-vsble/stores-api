@@ -6,7 +6,7 @@ const StoreMock = require('../mocks/models/StoreMock')
 const RequestMock = require('../mocks/RequestMock')
 
 describe('getNearest', () => {
-  const URL = '/test/nearests'
+  const URL = '/test/stores/nearests'
 
   describe('GET /nearests', () => {
     const PATH = URL
