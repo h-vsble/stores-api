@@ -2,7 +2,7 @@ require('dotenv').config()
 
 // In this file you can configure migrate-mongo
 
-const uri = process.env.NODE_ENV != 'test' ?
+const uri = process.env.STAGE != 'test' ?
   process.env.MONGODB_URL :
   process.env.MONGODB_URL_TEST
 
