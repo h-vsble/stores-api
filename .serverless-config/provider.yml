@@ -1,0 +1,14 @@
+name: aws
+runtime: nodejs12.x
+memorySize: 128
+timeout: 25
+stage: ${opt:stage, env:STAGE, 'dev'}
+region: us-west-2
+endpointType: REGIONAL
+credentials:
+  accessKeyId: ${env:AWS_ACCESS_KEY_ID}
+  secretAccessKey: ${env:AWS_SECRET_ACCESS_KEY}
+environment:
+  STAGE: ${self:provider.stage}
+apiKeys:
+  - ${self:service}-${self:provider.stage}-default

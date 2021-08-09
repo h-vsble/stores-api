@@ -1,0 +1,77 @@
+{
+  "name": "stores-api",
+  "version": "0.1.0",
+  "description": "Stores lambda API",
+  "scripts": {
+    "start": "npm run migrate && sls offline start --skipCacheInvalidation",
+    "lint": "cross-env STAGE=test eslint -c .eslintrc.json \"**/*.js\"",
+    "docs": "documentation readme functions/** --section=Docs",
+    "migrate": "migrate-mongo up",
+    "mocha": "cross-env NODE_ENV=test _mocha --config mocharc.js",
+    "test": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && STAGE=test npm run mocha",
+    "test:watch": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && STAGE=test npm run mocha -- --watch",
+    "test:coverage": "cross-env TZ=UTC STAGE=test npm run lint && STAGE=test npm run migrate && STAGE=test npm run coverage && npm run coverage:upload",
+    "coverage": "cross-env STAGE=test nyc --reporter=text-summary --reporter=lcov --reporter=cobertura --report-dir=./coverage --reporter=html npm run mocha -- --reporter=min --exit",
+    "coverage:upload": "codecov",
+    "update:docs": "npm run docs && git add README.md && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "parser"
+  ],
+  "author": "contartec",
+  "license": "MIT",
+  "_moduleAliases": {
+    "app": "./",
+    "configs": "./configs",
+    "functions": "./functions",
+    "models": "./models",
+    "middlewares": "./middlewares",
+    "tests": "./tests"
+  },
+  "dependencies": {
+    "@middy/core": "^2.4.3",
+    "@middy/do-not-wait-for-empty-event-loop": "^2.0.1",
+    "@middy/http-cors": "^2.4.3",
+    "@middy/http-json-body-parser": "^2.4.3",
+    "middy-mongoose-connector": "^0.1.4",
+    "migrate-mongo": "^8.2.3",
+    "module-alias": "^2.2.2",
+    "mongoose": "^5.13.3",
+    "serverless": "^1.79.0",
+    "yaml-boost": "^2.0.0"
+  },
+  "devDependencies": {
+    "@cruglobal/serverless-merge-config": "^1.1.0",
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.3.0",
+    "chai-shallow-deep-equal": "^1.4.6",
+    "codecov": "^3.8.2",
+    "cross-env": "^7.0.3",
+    "documentation": "^13.0.0",
+    "eslint": "^7.30.0",
+    "husky": "^5.1.0",
+    "jsdoc": "^3.6.2",
+    "mocha": "^9.0.2",
+    "nyc": "^15.1.0",
+    "serverless-dotenv-plugin": "^3.9.0",
+    "serverless-iam-roles-per-function": "^2.0.2",
+    "serverless-offline": "^7.0.0",
+    "sinon": "^11.1.1",
+    "sinon-chai": "^3.7.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint && npm run update:docs"
+    }
+  },
+  "nyc": {
+    "exclude": [
+      "*.js",
+      "tests",
+      "configs"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+Resources:
+
+  GatewayResponseDefault4XX:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters:
+        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+        gatewayresponse.header.Access-Control-Allow-Headers: "'x-access-token, Content-Type, Access-Control-Allow-Headers, AccessControl-Request-Headers, Authorization, X-Requested-With, Origin, Referer, User-Agent'"
+        gatewayresponse.header.Access-Control-Allow-Methods: "'*'"
+      ResponseType: DEFAULT_4XX
+      RestApiId:
+        Ref: 'ApiGatewayRestApi'
