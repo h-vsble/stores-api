@@ -7,6 +7,7 @@
 
 ### Requirements
 
+- Node `v12+`
 - MongoDB `v.4.x`
 
 ## Running
@@ -15,7 +16,7 @@ Copy `.env.example` to `.env` replacing the informations with the correct ones.
 
 Run `npm install`.
 
-Run `npm start` in order to run the app.
+Run `npm start` in order to run the app. (default's `localhost:3000`)
 
 ## Testing
 
